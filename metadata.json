@@ -1,0 +1,8 @@
+{
+  "name": "ElderHub OS",
+  "description": "The world's first agentic elder care operating system. A modular, scalable platform integrating AI agents, smart devices, and community-driven care services.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ]
+}

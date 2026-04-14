@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-elder-bg: #f7f6f3;
+  --color-elder-card: #ffffff;
+  --color-elder-border: #e5e2db;
+  --color-elder-accent: #2d6a4f;
+  --color-elder-accent-dim: #2d6a4f14;
+  --color-elder-text: #1a1a1a;
+  --color-elder-text-dim: #666666;
+}
+
+@layer base {
+  body {
+    @apply bg-elder-bg text-elder-text font-sans antialiased;
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&family=JetBrains+Mono:wght@400;500&display=swap');
