@@ -28,6 +28,7 @@ import { cn } from './lib/utils';
 import { Persona, Category, Agent, Product, FeedEvent } from './types';
 import { CATEGORIES, AGENTS, PRODUCTS, FEED_EVENTS } from './constants';
 import { getChatResponse } from './services/geminiService';
+import { CategoryResources } from './components/CategoryResources';
 import ReactMarkdown from 'react-markdown';
 
 // --- Components ---
@@ -729,7 +730,7 @@ export default function App() {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <h2 className="font-display text-2xl font-black text-elder-text">Explore Services & Providers</h2>
-                  <p className="text-sm text-elder-text-dim mt-1">43 categories · Community-maintained · Anyone can add or edit</p>
+                  <p className="text-sm text-elder-text-dim mt-1">{CATEGORIES.length} categories · Community-maintained · Anyone can add or edit</p>
                 </div>
                 {selectedCategory && (
                   <button 
@@ -754,6 +755,7 @@ export default function App() {
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-8">
+                  <CategoryResources categoryId={selectedCategory} />
                   {Array.from(new Set(CATEGORIES.map(c => c.group))).map(group => (
                     <div key={group} className="space-y-4">
                       <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest">{group}</h3>
