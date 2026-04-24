@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Activity, 
@@ -170,11 +170,22 @@ export default function App() {
   const [chatHistory, setChatHistory] = useState<{ role: string; parts: { text: string }[] }[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const resourcesPanelRef = useRef<HTMLDivElement | null>(null);
 
   // Auto-close mobile menu when view changes (navigation)
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [view]);
+
+  // When a category is selected, nudge the inline panel into view.
+  // Deferred via rAF so the panel has mounted and laid out before we measure.
+  useEffect(() => {
+    if (!selectedCategory) return;
+    const frame = requestAnimationFrame(() => {
+      resourcesPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [selectedCategory]);
 
   const navItems = [
     { id: 'hub', label: 'Hub', icon: Zap },
@@ -808,12 +819,14 @@ export default function App() {
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-8">
-                  <CategoryResources categoryId={selectedCategory} />
-                  {Array.from(new Set(CATEGORIES.map(c => c.group))).map(group => (
+                  {Array.from(new Set(CATEGORIES.map(c => c.group))).map(group => {
+                    const groupCategories = CATEGORIES.filter(c => c.group === group);
+                    const selectedInThisGroup = !!selectedCategory && groupCategories.some(c => c.id === selectedCategory);
+                    return (
                     <div key={group} className="space-y-4">
                       <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest">{group}</h3>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {CATEGORIES.filter(c => c.group === group).map(cat => (
+                        {groupCategories.map(cat => (
                           <button
                             key={cat.id}
                             onClick={() => setSelectedCategory(selectedCategory === cat.id ? null : cat.id)}
@@ -827,8 +840,21 @@ export default function App() {
                           </button>
                         ))}
                       </div>
+                      {/* Inline resources panel: renders directly under the group
+                          that owns the tapped tile, so the answer appears next to
+                          the question. Only one group can be 'selected' at a time. */}
+                      {selectedInThisGroup && (
+                        <div
+                          ref={resourcesPanelRef}
+                          className="scroll-mt-24"
+                          aria-live="polite"
+                        >
+                          <CategoryResources categoryId={selectedCategory} />
+                        </div>
+                      )}
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="space-y-6">
