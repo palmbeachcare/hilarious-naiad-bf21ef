@@ -349,7 +349,7 @@ export default function App() {
                   {persona !== 'senior' && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 shrink-0">
                       {[
-                        { label: "Categories", value: "43", color: "#2d6a4f" },
+                        { label: "Categories", value: String(CATEGORIES.length), color: "#2d6a4f" },
                         { label: "AI Agents", value: "6", color: "#0077b6" },
                         { label: "Active Status", value: "24/7", color: "#6a0572" },
                       ].map((stat, i) => (
@@ -523,7 +523,7 @@ export default function App() {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest">Service Categories</h3>
-                          <button onClick={() => setView('explore')} className="text-[10px] font-bold text-elder-accent hover:underline">View all 50+</button>
+                          <button onClick={() => setView('explore')} className="text-[10px] font-bold text-elder-accent hover:underline">View all {CATEGORIES.length}+</button>
                         </div>
                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
                           {CATEGORIES.slice(0, 11).map(cat => (
@@ -1311,7 +1311,7 @@ export default function App() {
                 <section className="bg-white rounded-2xl border border-elder-border p-8">
                   <h3 className="text-sm font-bold text-elder-text mb-6">📝 Add or Edit a Provider</h3>
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Business Name</label>
                         <input className="w-full px-4 py-2.5 rounded-xl border border-elder-border bg-gray-50 text-xs focus:outline-none focus:ring-2 focus:ring-elder-accent/20" />
