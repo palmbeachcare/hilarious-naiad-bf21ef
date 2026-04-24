@@ -29,6 +29,7 @@ import { Persona, Category, Agent, Product, FeedEvent } from './types';
 import { CATEGORIES, AGENTS, PRODUCTS, FEED_EVENTS } from './constants';
 import { getChatResponse } from './services/geminiService';
 import { CategoryResources } from './components/CategoryResources';
+import { ToastContainer } from './components/Toast';
 import ReactMarkdown from 'react-markdown';
 
 // --- Components ---
@@ -168,6 +169,12 @@ export default function App() {
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState<{ role: string; parts: { text: string }[] }[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Auto-close mobile menu when view changes (navigation)
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [view]);
 
   const navItems = [
     { id: 'hub', label: 'Hub', icon: Zap },
@@ -243,8 +250,14 @@ export default function App() {
               URGENT
             </button>
             <div className="w-px h-6 bg-elder-border hidden sm:block" />
-            <button className="p-2 rounded-lg hover:bg-gray-100 lg:hidden">
-              <Menu size={20} />
+            <button
+              onClick={() => setIsMobileMenuOpen(prev => !prev)}
+              className="min-w-[44px] min-h-[44px] p-2 rounded-lg hover:bg-gray-100 lg:hidden flex items-center justify-center"
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-nav-panel"
+            >
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
             <div className="hidden sm:flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-elder-accent/10 flex items-center justify-center text-elder-accent font-bold text-xs">
@@ -254,6 +267,46 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {/* Mobile nav panel — visible only below lg breakpoint, toggled by hamburger */}
+      <AnimatePresence initial={false}>
+        {isMobileMenuOpen && (
+          <motion.div
+            id="mobile-nav-panel"
+            key="mobile-nav"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: 'easeInOut' }}
+            className="lg:hidden overflow-hidden bg-white border-b border-elder-border sticky top-14 z-40"
+          >
+            <div className="max-w-7xl mx-auto px-4 py-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {navItems.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => setView(item.id)}
+                    className={cn(
+                      'min-h-[44px] px-3 py-2 rounded-lg text-[11px] font-bold transition-all flex items-center gap-2',
+                      view === item.id
+                        ? 'bg-elder-accent/10 text-elder-accent'
+                        : 'text-gray-600 hover:text-elder-text hover:bg-gray-100'
+                    )}
+                    aria-current={view === item.id ? 'page' : undefined}
+                  >
+                    <item.icon size={14} />
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              <button className="mt-2 sm:hidden w-full min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-red-600 text-white text-[11px] font-bold hover:bg-red-700 transition-colors">
+                <Phone size={14} />
+                URGENT
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="max-w-7xl mx-auto px-4 py-6">
         <AnimatePresence mode="wait">
@@ -1599,6 +1652,7 @@ export default function App() {
           </div>
         </div>
       </footer>
+      <ToastContainer />
     </div>
   );
 }
