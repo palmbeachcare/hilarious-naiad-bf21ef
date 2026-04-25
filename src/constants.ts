@@ -37,7 +37,7 @@ export const CATEGORIES: Category[] = [
   { id: "caregiver", name: "Caregiver Support", icon: "❤️", group: "Support" },
   { id: "legal", name: "Elder Law", icon: "⚖️", group: "Professional" },
   { id: "financial", name: "Benefits/Finance", icon: "📋", group: "Professional" },
-  { id: "caremanage", name: "Care Management", icon: "📌", group: "Professional" },
+  { id: "caremanage", name: "Geriatric Care Managers", icon: "🧭", group: "Professional" },
   { id: "homemod", name: "Home Modification", icon: "🔧", group: "Professional" },
   { id: "community", name: "Community Services", icon: "🏘️", group: "Support" },
   { id: "placement", name: "Placement Agencies", icon: "🏢", group: "Living" },
