@@ -849,7 +849,7 @@ export default function App() {
                           className="scroll-mt-24"
                           aria-live="polite"
                         >
-                          <CategoryResources categoryId={selectedCategory} />
+                          <CategoryResources key={selectedCategory} categoryId={selectedCategory} />
                         </div>
                       )}
                     </div>
