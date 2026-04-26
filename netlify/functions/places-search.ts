@@ -252,8 +252,10 @@ export const handler: Handler = async (event) => {
     if (!placesResp.ok) {
       const errBody = await placesResp.text();
       console.error('Places API error', placesResp.status, errBody);
+      // DEBUG: surface Google's full error body so user can diagnose 401/403.
+      // Will be reverted to a clean message once the auth issue is fixed.
       return json(502, errorResult(
-        `Places API returned ${placesResp.status}`
+        `Places API ${placesResp.status} — Google said: ${errBody.slice(0, 600)}`
       ));
     }
 
