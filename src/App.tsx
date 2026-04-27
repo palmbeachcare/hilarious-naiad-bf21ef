@@ -26,10 +26,11 @@ import {
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { Persona, Category, Agent, Product, FeedEvent } from './types';
-import { CATEGORIES, AGENTS, PRODUCTS, FEED_EVENTS } from './constants';
+import { CATEGORIES, AGENTS, PRODUCTS, FEED_EVENTS, FLEC_LINKS } from './constants';
 import { getChatResponse } from './services/geminiService';
 import { CategoryResources } from './components/CategoryResources';
 import { ToastContainer } from './components/Toast';
+import { withUtm } from './lib/utm';
 import ReactMarkdown from 'react-markdown';
 
 // --- Components ---
@@ -1674,7 +1675,7 @@ export default function App() {
             © 2026 ElderHub OS · HIPAA Compliant · FHIR-native · Palm Beach County, FL
           </div>
           <div className="flex gap-6">
-            <span className="text-[9px] text-gray-500">Medical Partner: <a href="https://palmbeachcare.com" className="text-gray-400 hover:underline">Palm Beach Elder Care</a></span>
+            <span className="text-[9px] text-gray-500">Medical Partner: <a href={withUtm(FLEC_LINKS.homepage, { content: 'footer-link' })} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:underline">Palm Beach Elder Care</a></span>
           </div>
         </div>
       </footer>

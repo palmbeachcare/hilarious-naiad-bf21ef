@@ -86,3 +86,14 @@ export const FEED_EVENTS: FeedEvent[] = [
   { time: "34m ago", event: "New provider registered (community edit)", detail: "Jupiter Mobile Dental — Added by Dr. Sarah Kim. Pending community verification (2/3 approvals).", type: "community", icon: "🦷" },
   { time: "1h ago", event: "Product auto-dispatched via SupplyChain", detail: "Omron BP Monitor shipped to patient #2847 after RPM enrollment. Billing auto-posted to payer.", type: "agent", icon: "📦" },
 ];
+
+// Outbound links to FLEC's clinical conversion surface (palmbeachcare.com).
+// Centralized so URL changes are a one-file edit. Use through withUtm()
+// from ../lib/utm so attribution parameters are appended correctly.
+export const FLEC_LINKS = {
+  // PLACEHOLDER — to be replaced with the real PBC scheduling URL.
+  // Currently routes to the homepage so clicks don't 404 in case this
+  // ships before the real URL is wired.
+  scheduleCareNavigator: 'https://palmbeachcare.com/contact',
+  homepage: 'https://palmbeachcare.com',
+};

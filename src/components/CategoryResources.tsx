@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { CATEGORIES } from '../constants';
 import { searchProviders, getBrowserLocation } from '../services/providerSearch';
+import { CareNavigatorCTA } from './CareNavigatorCTA';
 import type { Provider, ProviderSearchResult, SearchContext } from '../types';
 
 interface CategoryResourcesProps {
@@ -242,7 +243,20 @@ export function CategoryResources({ categoryId }: CategoryResourcesProps) {
         </AnimatePresence>
 
         {/* Status / results zone */}
-        <div className="px-5 py-4 min-h-[120px]">
+        <div className="px-5 py-4 min-h-[120px] space-y-4">
+          {/* Banner CTA — visible whenever a search result has loaded
+              (ok / empty / error). Hidden during initial loading and the
+              geolocation prompt to avoid distracting from the primary
+              flow. categoryId is always set here since we early-return
+              if it is null, so passing as non-null. */}
+          {!isLoading && result && (
+            <CareNavigatorCTA
+              variant="banner"
+              categoryId={categoryId}
+              searchTerm={searchContext?.zip ?? searchContext?.city}
+            />
+          )}
+
           {isLoading && <LoadingState />}
 
           {!isLoading && locationStatus === 'requesting' && !searchContext && (
@@ -252,6 +266,8 @@ export function CategoryResources({ categoryId }: CategoryResourcesProps) {
           {!isLoading && result && result.status === 'ok' && (
             <ResultsList
               providers={result.providers}
+              categoryId={categoryId}
+              searchTerm={searchContext?.zip ?? searchContext?.city}
               onExpand={
                 searchContext &&
                 (searchContext.radiusMiles ?? DEFAULT_RADIUS_MILES) < EXPANDED_RADIUS_MILES
@@ -401,15 +417,34 @@ function ErrorState({ message, onRetry }: { message: string; onRetry?: () => voi
 
 function ResultsList({
   providers,
+  categoryId,
+  searchTerm,
   onExpand,
 }: {
   providers: Provider[];
+  categoryId: string;
+  searchTerm?: string;
   onExpand?: () => void;
 }) {
+  // Inject the inline CTA after the 3rd provider card if there are at
+  // least 4 results. Below 4 results the banner CTA already covers it
+  // and a second inline CTA would feel pushy; above 4, the inline keeps
+  // the CTA in view as users scan further down the list.
+  const showInlineCta = providers.length >= 4;
+
   return (
     <div className="space-y-3">
-      {providers.map((p) => (
-        <ProviderCard key={p.id} provider={p} />
+      {providers.map((p, i) => (
+        <div key={p.id} className="space-y-3">
+          <ProviderCard provider={p} />
+          {showInlineCta && i === 2 && (
+            <CareNavigatorCTA
+              variant="inline"
+              categoryId={categoryId}
+              searchTerm={searchTerm}
+            />
+          )}
+        </div>
       ))}
       {onExpand && providers.length < 5 && (
         <button
