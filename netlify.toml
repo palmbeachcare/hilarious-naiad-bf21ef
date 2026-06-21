@@ -5,3 +5,17 @@
 
 [functions]
   node_bundler = "esbuild"
+
+# --- Decap CMS OAuth proxy (replaces deprecated Netlify Identity / Git Gateway) ---
+# Friendly paths that Decap's config.yml points at. Each rewrites to a function.
+[[redirects]]
+  from = "/api/auth"
+  to = "/.netlify/functions/auth"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/callback"
+  to = "/.netlify/functions/callback"
+  status = 200
+  force = true
